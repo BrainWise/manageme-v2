@@ -776,7 +776,7 @@ var CHARTS={};
 function mkChart(id,cfg){if(CHARTS[id]){try{CHARTS[id].destroy();}catch(e){}}var el=document.getElementById(id);if(!el||typeof Chart==='undefined')return;CHARTS[id]=new Chart(el.getContext('2d'),cfg);}
 function cDef(extra){var base={responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#9a9590',font:{family:'Lato',size:10}}}},scales:{x:{ticks:{color:'#9a9590',font:{size:9}},grid:{color:'rgba(255,255,255,0.04)'}},y:{ticks:{color:'#9a9590',font:{size:9}},grid:{color:'rgba(255,255,255,0.04)'}}}};return extra?Object.assign(base,extra):base;}
 function render(){
-  if(!isLoggedIn()){showAuth();return;}
+  if(!CURRENT_USER){showAuth();return;}
   updateHdr();
   var c=document.getElementById('content');
   var fns={dashboard:rDashboard,portal:rPortal,monthly:rMonthly,weekly:rWeekly,matrix:rMatrix,review:rReview,reports:rReports,finance:rFinance,statements:rStatements,admin:rAdmin};
