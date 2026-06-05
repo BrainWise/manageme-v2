@@ -197,6 +197,20 @@ input[type="checkbox"]{width:auto;accent-color:var(--gold);}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 @media print{#bnav,#toast,#auth-screen,button,.pr,.filter-bar,.egrid,input,select,textarea{display:none!important;}body{background:white;color:#111;padding:0;max-width:100%;}.card,.gi,.sc,.ac,.db{background:#f7f7f7!important;border:1px solid #ddd!important;}#hdr{background:white;border-bottom:1px solid #ccc;position:static;}.stmt-table{border:1px solid #ccc;}.stmt-table th{background:#f0f0f0;color:#333;}.sv,.av,.famt,.nw-value{color:#333!important;}.sl,.eye,.dn{color:#8B6914!important;}.stmt-table .pos{color:#1a7a4a!important;}.stmt-table .neg{color:#c0392b!important;}}
 
+
+/* ── LIGHT MODE ─────────────────────────── */
+body[data-theme="light"]{
+  --bg:#f4f1ec;--bg2:#ffffff;--bg3:#ede9e2;
+  --cream:#1a1a1a;--cream2:#555555;
+  --gold:#7a5c10;--gold2:#5c4408;--gold3:rgba(122,92,16,0.10);
+  --b1:rgba(122,92,16,0.18);--b2:rgba(0,0,0,0.08);--b3:rgba(0,0,0,0.04);
+  --red:#b03020;--green:#1a6a3a;--amber:#a06800;
+  --blue:#1a4f90;--teal:#0e7060;--purple:#6a2888;
+}
+body[data-theme="light"] #bnav{background:#ffffff;border-top:1px solid rgba(0,0,0,.1);}
+body[data-theme="light"] .nb{color:#444;}
+body[data-theme="light"] .nb.active{color:var(--gold);}
+body[data-theme="light"] .card{box-shadow:0 2px 12px rgba(0,0,0,.08);}
 </style>
 </head>
 <body>
@@ -223,9 +237,15 @@ input[type="checkbox"]{width:auto;accent-color:var(--gold);}
           <span class="hdr-sub" id="role-badge">Loading...</span>
         </div>
       </div>
-      <div class="hdr-right">
-        <span class="hdr-month" id="hm">Loading...</span>
-        <span class="hwn" id="hw">W1</span>
+      <div class="hdr-right" style="display:flex;align-items:center;gap:6px;">
+        <div style="text-align:right;margin-right:4px;">
+          <span class="hdr-month" id="hm">Loading...</span>
+          <span class="hwn" id="hw">W1</span>
+        </div>
+        <button onclick="adjustFont(-1)" title="Decrease font size" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:26px;height:26px;border-radius:5px;cursor:pointer;font-size:10px;font-weight:bold;flex-shrink:0;">A-</button>
+        <button onclick="adjustFont(1)" title="Increase font size" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:26px;height:26px;border-radius:5px;cursor:pointer;font-size:12px;font-weight:bold;flex-shrink:0;">A+</button>
+        <button onclick="toggleTheme()" id="theme-btn" title="Toggle light/dark mode" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:26px;height:26px;border-radius:5px;cursor:pointer;font-size:15px;flex-shrink:0;">🌙</button>
+        <button onclick="doLogout()" title="Sign out" style="background:rgba(192,57,43,.5);border:none;color:#fff;padding:0 8px;height:26px;border-radius:5px;cursor:pointer;font-size:10px;font-weight:700;letter-spacing:.5px;flex-shrink:0;">OUT</button>
       </div>
     </div>
   </header>
@@ -775,14 +795,7 @@ function updateHdr(){
 var CHARTS={};
 function mkChart(id,cfg){if(CHARTS[id]){try{CHARTS[id].destroy();}catch(e){}}var el=document.getElementById(id);if(!el||typeof Chart==='undefined')return;CHARTS[id]=new Chart(el.getContext('2d'),cfg);}
 function cDef(extra){var base={responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#9a9590',font:{family:'Lato',size:10}}}},scales:{x:{ticks:{color:'#9a9590',font:{size:9}},grid:{color:'rgba(255,255,255,0.04)'}},y:{ticks:{color:'#9a9590',font:{size:9}},grid:{color:'rgba(255,255,255,0.04)'}}}};return extra?Object.assign(base,extra):base;}
-function render(){
-  if(!CURRENT_USER){showAuth();return;}
-  updateHdr();
-  var c=document.getElementById('content');
-  var fns={dashboard:rDashboard,portal:rPortal,monthly:rMonthly,weekly:rWeekly,matrix:rMatrix,review:rReview,reports:rReports,finance:rFinance,statements:rStatements,admin:rAdmin};
-  c.innerHTML=(fns[ST.tab]||rDashboard)();
-  postRender();
-}
+/* duplicate render removed */
 function postRender(){
   var nb=document.getElementById('btn-no');
   if(nb)nb.addEventListener('click',function(){DB.noCount++;logAudit('DISCIPLINE','Said No counter incremented to '+DB.noCount);saveDB();toast('Said No \u2014 #'+DB.noCount+' this year!');render();});
@@ -1711,6 +1724,25 @@ async function setNewPassword(){
 }
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js').catch(function(){});});}
 init();
+
+
+/* ── FONT SIZE & THEME CONTROLS ─── */
+var FONT_SCALE=parseFloat(localStorage.getItem('mm-font-scale')||'1');
+(function(){document.documentElement.style.fontSize=(16*FONT_SCALE)+'px';}());
+function adjustFont(dir){
+  FONT_SCALE=Math.max(0.8,Math.min(1.5,FONT_SCALE+dir*0.1));
+  document.documentElement.style.fontSize=(16*FONT_SCALE)+'px';
+  try{localStorage.setItem('mm-font-scale',String(FONT_SCALE));}catch(e){}
+}
+var DARK_MODE=localStorage.getItem('mm-theme')!=='light';
+function applyTheme(){
+  if(DARK_MODE)document.body.removeAttribute('data-theme');
+  else document.body.setAttribute('data-theme','light');
+  var btn=document.getElementById('theme-btn');
+  if(btn)btn.textContent=DARK_MODE?'🌙':'☀️';
+}
+function toggleTheme(){DARK_MODE=!DARK_MODE;try{localStorage.setItem('mm-theme',DARK_MODE?'dark':'light');}catch(e){}applyTheme();}
+(function(){applyTheme();}());
 
 </script>
 </body>
