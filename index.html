@@ -717,7 +717,7 @@ function rPaymentTab(){
     '<p style="font-size:10px;color:var(--cream2);text-align:center;margin-top:8px">Upgrades are processed Monday\u2013Friday, 8am\u20136pm Liberia time</p>'+
   '</div>'+
   (PROFILE&&PROFILE._paymentHistory?'<div class="card"><span class="sl" style="margin-bottom:8px">Your Submission History</span><p style="font-size:12px;color:var(--cream2)">Check Admin for status.</p></div>':'')+
-  '<div style="height:8px"></div>'+rShareCard();
+  '<div style="height:8px"></div>'+(archived.length?'<div class="card" style="margin-top:10px;opacity:.75"><span class="sl" style="margin-bottom:6px;color:var(--amber)">Archived Goals ('+archived.length+')</span><p style="font-size:11px;color:var(--cream2);margin-bottom:8px">Archived goals keep their data. Tap Restore to make a goal active again.</p>'+archived.map(function(g){return renderGoalItem(g,false);}).join('')+'</div>':'')+rShareCard();
 }
 async function submitPayment(){
   var ref=document.getElementById('pay-ref'),prov=document.getElementById('pay-provider'),cur=document.getElementById('pay-currency'),err=document.getElementById('pay-err');
@@ -748,7 +748,7 @@ async function submitPayment(){
 /* ═══════════════════════════════════════
    STATE
 ═══════════════════════════════════════ */
-var ST={tab:'dashboard',mk:'',week:1,portalPeriod:'1y',portalArea:'All',rmode:'weekly',aq:'q1',editId:null,transferId:null,editTaskId:null,fview:'add',weekView:1,catType:'income',editCatIdx:null,adminView:'account',stmtView:'income',stmtPeriod:'month'};
+var ST={tab:'dashboard',mk:'',week:1,portalPeriod:'1y',portalArea:'All',rmode:'weekly',aq:'q1',editId:null,transferId:null,editTaskId:null,addingSG:null,addingAct:null,fview:'add',weekView:1,catType:'income',editCatIdx:null,adminView:'account',stmtView:'income',stmtPeriod:'month'};
 var FILT={active:false,type:'all',dateFrom:'',dateTo:'',category:'all',area:'all',status:'all',fund:'all'};
 function initST(){var n=new Date();ST.mk=n.getFullYear()+'-'+pd(n.getMonth()+1);ST.week=Math.min(4,Math.ceil(n.getDate()/7));ST.weekView=ST.week;}
 
@@ -800,7 +800,7 @@ function buildBalanceSheet(){var totalFunds=(DB.finance.funds||[]).reduce(functi
    NAV & RENDER
 ═══════════════════════════════════════ */
 function toast(msg,err){var t=document.getElementById('toast');t.textContent=msg;t.style.background=err?'var(--red)':'var(--green)';t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2500);}
-function switchTab(tab){ST.tab=tab;ST.editId=null;ST.transferId=null;ST.editTaskId=null;document.querySelectorAll('.nb').forEach(function(b){b.classList.toggle('active',b.dataset.tab===tab);});render();window.scrollTo(0,0);}
+function switchTab(tab){ST.tab=tab;ST.editId=null;ST.transferId=null;ST.editTaskId=null;ST.addingSG=null;ST.addingAct=null;document.querySelectorAll('.nb').forEach(function(b){b.classList.toggle('active',b.dataset.tab===tab);});render();window.scrollTo(0,0);}
 function updateHdr(){
   var el=document.getElementById('hm');if(el)el.textContent=ml(ST.mk);
   var hw=document.getElementById('hw');if(hw)hw.textContent='W'+ST.week;
@@ -949,21 +949,51 @@ function renderGoalItem(g,showTx){
     return'<div class="gi editing"><div style="flex:1"><span class="sld" style="margin-bottom:5px">Editing goal</span><input type="text" id="ei-t" value="'+esc(g.text)+'" style="margin-bottom:6px"><div class="g3" style="margin-bottom:6px"><select id="ei-a">'+aOpts+'</select><select id="ei-p">'+pOpts+'</select><select id="ei-m">'+mOpts+'</select></div><div class="fr"><button class="btn bp bsm" onclick="saveEdit(\''+g.id+'\')">Save</button><button class="btn bsm" onclick="cancelEdit()">Cancel</button></div></div></div>';
   }
   var txPanel='';
-  if(isTx){var tpOpts=PERIODS.map(function(p){return'<option value="'+p.key+'"'+(g.period===p.key?' selected':'')+'>'+p.label+'</option>';}).join('');var taOpts=AREAS.map(function(a){return'<option value="'+a.key+'"'+(g.area===a.key?' selected':'')+'>'+a.label+'</option>';}).join('');txPanel='<div class="tpanel"><span class="sl" style="color:var(--teal);margin-bottom:6px">\u21c4 Transfer Goal</span><div class="g2" style="margin-bottom:8px"><select id="tp-p">'+tpOpts+'</select><select id="tp-a">'+taOpts+'</select></div><div class="fr"><button class="btn bt bsm" onclick="doTransfer(\''+g.id+'\')">Confirm</button><button class="btn bsm" onclick="cancelTransfer()">Cancel</button></div></div>';}
-  return'<div><div class="gi'+(g.completed?' dim':'')+(isTx?' tx':'')+' '+aObj.cls+'"><div class="cb'+(g.completed?' done':'')+'" onclick="toggleG(\''+g.id+'\')">'+( g.completed?'&#10003;':'')+'</div><div style="flex:1"><p class="gt'+(g.completed?' done':'')+'">'+esc(g.text)+'</p><div class="gmeta">'+(pObj?'<span class="badge '+pObj.cls+'">'+pObj.label+'</span>':'')+' <span class="areabd">'+aObj.short+'</span>'+(g.month?'<span class="areabd" style="color:var(--gold)">'+MONTHS[g.month-1]+'</span>':'')+'</div></div><div class="gactions"><button class="btn bsm" onclick="startEdit(\''+g.id+'\')">\u270e</button>'+(showTx?'<button class="btn bt bsm" onclick="startTransfer(\''+g.id+'\')">\u21c4</button>':'')+' <button class="btn bd bsm" onclick="delGoal(\''+g.id+'\')">&#215;</button></div></div>'+txPanel+'</div>';
+  if(isTx){
+    var tpOpts=PERIODS.map(function(p){return'<option value="'+p.key+'"'+(g.period===p.key?' selected':'')+'>'+p.label+'</option>';}).join('');
+    var taOpts=AREAS.map(function(a){return'<option value="'+a.key+'"'+(g.area===a.key?' selected':'')+'>'+a.label+'</option>';}).join('');
+    txPanel='<div class="tpanel"><span class="sl" style="color:var(--teal);margin-bottom:6px">\u21c4 Transfer Goal</span><div class="g2" style="margin-bottom:8px"><select id="tp-p">'+tpOpts+'</select><select id="tp-a">'+taOpts+'</select></div><div class="fr"><button class="btn bt bsm" onclick="doTransfer(\''+g.id+'\')">Confirm</button><button class="btn bsm" onclick="cancelTransfer()">Cancel</button></div></div>';
+  }
+  var inactive=g.active===false;
+  /* ─ sub-goals ─ */
+  var sgs=g.subgoals||[];
+  var sgRows='';
+  for(var si=0;si<sgs.length;si++){var s=sgs[si];sgRows+='<div style="display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid var(--b3)"><div class="cb'+(s.done?' done':'')+'" onclick="togSG(\''+g.id+'\',\''+s.id+'\')" style="width:16px;height:16px;flex-shrink:0;border-radius:4px;font-size:11px">'+(s.done?'&#10003;':'')+'</div><p style="flex:1;font-size:12px;line-height:1.4'+(s.done?';text-decoration:line-through;opacity:.5':'')+'">'+ esc(s.text)+'</p><button class="btn bd bsm" onclick="delSG(\''+g.id+'\',\''+s.id+'\')">&#215;</button></div>';}
+  var sgInput=ST.addingSG===g.id?'<div style="display:flex;gap:5px;margin-top:6px"><input id="sg-inp-'+g.id+'" type="text" placeholder="Enter sub-goal..." style="flex:1;font-size:12px" onkeydown="if(event.key===\'Enter\')doAddSG(\''+g.id+'\')"><button class="btn bp bsm" onclick="doAddSG(\''+g.id+'\')">Add</button><button class="btn bd bsm" onclick="cancelAddSG()">&#215;</button></div>':'';
+  var sgSection=sgs.length||ST.addingSG===g.id?'<div style="padding:6px 10px 4px"><span class="sld" style="font-size:9px;margin-bottom:4px">SUB-GOALS</span>'+sgRows+sgInput+'</div>':'';
+  /* ─ activities ─ */
+  var acts=g.activities||[];
+  var actRows='';
+  for(var ai=0;ai<acts.length;ai++){var ac=acts[ai];actRows+='<div style="display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid var(--b3)"><div class="cb'+(ac.done?' done':'')+'" onclick="togAct(\''+g.id+'\',\''+ac.id+'\')" style="width:16px;height:16px;flex-shrink:0;border-radius:4px;font-size:11px">'+(ac.done?'&#10003;':'')+'</div><p style="flex:1;font-size:12px;line-height:1.4'+(ac.done?';text-decoration:line-through;opacity:.5':'')+'">'+ esc(ac.text)+'</p><button class="btn bd bsm" onclick="delAct(\''+g.id+'\',\''+ac.id+'\')">&#215;</button></div>';}
+  var actInput=ST.addingAct===g.id?'<div style="display:flex;gap:5px;margin-top:6px"><input id="act-inp-'+g.id+'" type="text" placeholder="Enter activity or action step..." style="flex:1;font-size:12px" onkeydown="if(event.key===\'Enter\')doAddAct(\''+g.id+'\')"><button class="btn bp bsm" onclick="doAddAct(\''+g.id+'\')">Add</button><button class="btn bd bsm" onclick="cancelAddAct()">&#215;</button></div>':'';
+  var actSection=acts.length||ST.addingAct===g.id?'<div style="padding:6px 10px 4px"><span class="sld" style="font-size:9px;margin-bottom:4px">ACTIVITIES</span>'+actRows+actInput+'</div>':'';
+  /* ─ footer buttons ─ */
+  var footerBtns='<div style="display:flex;gap:5px;flex-wrap:wrap;padding:7px 10px;border-top:1px solid var(--b2);background:var(--b3)">'
+    +'<button class="btn bsm" style="font-size:10px" onclick="startAddSG(\''+g.id+'\')">+ Sub-goal</button>'
+    +'<button class="btn bsm" style="font-size:10px" onclick="startAddAct(\''+g.id+'\')">+ Activity</button>'
+    +(showTx?'<button class="btn bt bsm" style="font-size:10px" onclick="startTransfer(\''+g.id+'\')">&#8644; Move</button>':'')
+    +'<button class="btn bsm" style="font-size:10px;margin-left:auto;color:var(--amber)" onclick="toggleGoalActive(\''+g.id+'\')">'+(inactive?'Restore':'Archive')+'</button>'
+    +'<button class="btn bd bsm" style="font-size:10px" onclick="delGoal(\''+g.id+'\')">Delete</button>'
+    +'</div>';
+  /* ─ assemble ─ */
+  var dim=g.completed||inactive;
+  return'<div style="border:1px solid var(--b2);border-radius:12px;margin-bottom:10px;overflow:hidden'+(inactive?';opacity:.55':'')+'"><div class="gi'+(dim?' dim':'')+' '+aObj.cls+'" style="border:none;border-radius:0;margin:0'+(inactive?';border-left:3px solid var(--amber)':'')+'"><div class="cb'+(g.completed?' done':'')+'" onclick="toggleG(\''+g.id+'\')" '+(inactive?'style="pointer-events:none"':'')+'>'+( g.completed?'&#10003;':'')+'</div><div style="flex:1"><p class="gt'+(dim?' done':'')+'">'+esc(g.text)+(inactive?' <em style="font-size:10px;color:var(--amber)">[archived]</em>':'')+'</p><div class="gmeta">'+(pObj?'<span class="badge '+pObj.cls+'">'+pObj.label+'</span>':'')+' <span class="areabd">'+aObj.short+'</span>'+(g.month?'<span class="areabd" style="color:var(--gold)">'+MONTHS[g.month-1]+'</span>':'')+'</div></div><div class="gactions"><button class="btn bsm" onclick="startEdit(\''+g.id+'\')">&#9998;</button></div></div>'+txPanel+sgSection+actSection+footerBtns+'</div>';
 }
+
 function rPortal(){
   var pp=ST.portalPeriod,pa=ST.portalArea;
   var pObj=PERIODS.find(function(p){return p.key===pp;})||PERIODS[3];
   var fArea=FILT.active&&FILT.area!=='all'?FILT.area:pa;
   var fStatus=FILT.active&&FILT.status!=='all'?FILT.status:'all';
   var gs=allGoals().filter(function(g){
+    if(g.active===false)return false;
     if(g.period!==pp)return false;
     if(fArea!=='All'&&g.area!==fArea)return false;
     if(fStatus==='active'&&g.completed)return false;
     if(fStatus==='done'&&!g.completed)return false;
     return true;
   });
+  var archived=allGoals().filter(function(g){return g.active===false&&g.period===pp;});
   var ppills=PERIODS.map(function(p){var cnt=allGoals().filter(function(g){return g.period===p.key;}).length;return'<button class="pill'+(pp===p.key?' on':'')+'" onclick="setPortalP(\''+p.key+'\')">'+p.label+' ('+cnt+')</button>';}).join('');
   var apills='<button class="pill'+(pa==='All'?' on':'')+'" onclick="setPortalA(\'All\')">All</button>'+AREAS.map(function(a){var cnt=allGoals().filter(function(g){return g.period===pp&&g.area===a.key;}).length;return'<button class="pill'+(pa===a.key?' on':'')+'" onclick="setPortalA(\''+a.key+'\')">'+a.short+' ('+cnt+')</button>';}).join('');
   var areaOpts=AREAS.map(function(a){return'<option value="'+a.key+'"'+(pa!=='All'&&pa===a.key?' selected':'')+'>'+a.label+'</option>';}).join('');
@@ -1662,10 +1692,72 @@ function addPortalGoal(){
   if(!canAddGoal()){toast('Free plan: 10 goal limit reached. Upgrade to add more.','error');switchTab('payment');return;}
   if(!DB.goals[a.value])DB.goals[a.value]=[];
   var g={id:uid(),text:t.value.trim(),area:a.value,period:ST.portalPeriod,month:m?parseInt(m.value)||null:null,completed:false,created:td()};
-  DB.goals[a.value].push(g);logAudit('GOAL','Added: '+g.text.substring(0,40));saveDB();toast('Goal added \u2713');t.value='';render();
+  DB.goals[a.value].push(g);logAudit('GOAL','Added: '+g.text.substring(0,40));saveDB();
+  t.value='';if(a)a.value='';if(m)m.value='';
+  // Show prominent success banner in the form
+  var hint=document.getElementById('goal-hint');
+  if(hint){hint.style.display='block';hint.style.background='rgba(26,122,74,0.18)';hint.style.borderColor='var(--green)';hint.style.color='var(--green)';hint.innerHTML='<strong>\u2713 Goal saved!</strong> \u201c'+esc(g.text.substring(0,50))+'\u201d added to your '+g.period+' goals. Scroll down to see it.';setTimeout(function(){if(hint){hint.style.background='var(--gold3)';hint.style.borderColor='var(--gold)';hint.style.color='var(--gold)';hint.innerHTML='Select a life area below \u2014 an example will appear here...';}},3500);}
+  else{toast('Goal saved \u2713 \u2014 \u201c'+g.text.substring(0,30)+'...\u201d','success');}
+  render();
 }
 function toggleG(id){var r=getGoalById(id);if(!r)return;r.goal.completed=!r.goal.completed;saveDB();render();}
-function delGoal(id){if(!confirm('Delete this goal?'))return;var r=getGoalById(id);if(!r)return;DB.goals[r.area]=(DB.goals[r.area]||[]).filter(function(g){return g.id!==id;});logAudit('GOAL','Deleted goal');saveDB();toast('Deleted');render();}
+
+/* ── SUB-GOALS & ACTIVITIES ─────────── */
+function startAddSG(gid){ST.addingSG=gid;ST.addingAct=null;render();setTimeout(function(){var el=document.getElementById('sg-inp-'+gid);if(el)el.focus();},80);}
+function cancelAddSG(){ST.addingSG=null;render();}
+function doAddSG(gid){
+  var inp=document.getElementById('sg-inp-'+gid);
+  if(!inp||!inp.value.trim()){toast('Enter sub-goal text','error');return;}
+  var r=getGoalById(gid);if(!r)return;
+  if(!r.goal.subgoals)r.goal.subgoals=[];
+  r.goal.subgoals.push({id:uid(),text:inp.value.trim(),done:false});
+  ST.addingSG=null;saveDB();toast('Sub-goal added ✓');render();
+}
+function delSG(gid,sid){
+  var r=getGoalById(gid);if(!r)return;
+  r.goal.subgoals=(r.goal.subgoals||[]).filter(function(s){return s.id!==sid;});
+  saveDB();render();
+}
+function togSG(gid,sid){
+  var r=getGoalById(gid);if(!r)return;
+  var sg=(r.goal.subgoals||[]).find(function(s){return s.id===sid;});
+  if(sg){sg.done=!sg.done;saveDB();render();}
+}
+function startAddAct(gid){ST.addingAct=gid;ST.addingSG=null;render();setTimeout(function(){var el=document.getElementById('act-inp-'+gid);if(el)el.focus();},80);}
+function cancelAddAct(){ST.addingAct=null;render();}
+function doAddAct(gid){
+  var inp=document.getElementById('act-inp-'+gid);
+  if(!inp||!inp.value.trim()){toast('Enter activity text','error');return;}
+  var r=getGoalById(gid);if(!r)return;
+  if(!r.goal.activities)r.goal.activities=[];
+  r.goal.activities.push({id:uid(),text:inp.value.trim(),done:false});
+  ST.addingAct=null;saveDB();toast('Activity added ✓');render();
+}
+function delAct(gid,aid){
+  var r=getGoalById(gid);if(!r)return;
+  r.goal.activities=(r.goal.activities||[]).filter(function(a){return a.id!==aid;});
+  saveDB();render();
+}
+function togAct(gid,aid){
+  var r=getGoalById(gid);if(!r)return;
+  var act=(r.goal.activities||[]).find(function(a){return a.id===aid;});
+  if(act){act.done=!act.done;saveDB();render();}
+}
+
+function toggleGoalActive(id){
+  var r=getGoalById(id);if(!r)return;
+  r.goal.active=r.goal.active===false?true:false;
+  var state=r.goal.active===false?'archived':'restored';
+  saveDB();toast('Goal '+state);render();
+}
+function delGoal(id){
+  if(!confirm('Delete this goal permanently? This cannot be undone.'))return;
+  var r=getGoalById(id);if(!r)return;
+  DB.goals[r.area]=(DB.goals[r.area]||[]).filter(function(g){return g.id!==id;});
+  // Remove from any monthly plan slots
+  Object.keys(DB.plans||{}).forEach(function(mk){var p=DB.plans[mk];if(!p)return;if(p.primary&&p.primary.goalId===id)p.primary=null;if(p.backup1&&p.backup1.goalId===id)p.backup1=null;if(p.backup2&&p.backup2.goalId===id)p.backup2=null;});
+  logAudit('GOAL','Deleted goal: '+id);saveDB();toast('Goal deleted');render();
+}
 function startEdit(id){ST.editId=id;ST.transferId=null;render();}function cancelEdit(){ST.editId=null;render();}
 function saveEdit(id){var t=document.getElementById('ei-t'),a=document.getElementById('ei-a'),p=document.getElementById('ei-p'),m=document.getElementById('ei-m');if(!t||!t.value.trim()){toast('Text required','error');return;}var r=getGoalById(id);if(!r)return;var na=a?a.value:r.area;if(na!==r.area){DB.goals[r.area]=(DB.goals[r.area]||[]).filter(function(g){return g.id!==id;});r.goal.area=na;if(!DB.goals[na])DB.goals[na]=[];DB.goals[na].push(r.goal);}r.goal.text=t.value.trim();if(p)r.goal.period=p.value;if(m)r.goal.month=parseInt(m.value)||null;r.goal.edited=td();ST.editId=null;saveDB();toast('Updated \u2713');render();}
 function startTransfer(id){ST.transferId=id;ST.editId=null;render();}function cancelTransfer(){ST.transferId=null;render();}
