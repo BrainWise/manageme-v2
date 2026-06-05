@@ -198,7 +198,7 @@ input[type="checkbox"]{width:auto;accent-color:var(--gold);}
 @media print{#bnav,#toast,#auth-screen,button,.pr,.filter-bar,.egrid,input,select,textarea{display:none!important;}body{background:white;color:#111;padding:0;max-width:100%;}.card,.gi,.sc,.ac,.db{background:#f7f7f7!important;border:1px solid #ddd!important;}#hdr{background:white;border-bottom:1px solid #ccc;position:static;}.stmt-table{border:1px solid #ccc;}.stmt-table th{background:#f0f0f0;color:#333;}.sv,.av,.famt,.nw-value{color:#333!important;}.sl,.eye,.dn{color:#8B6914!important;}.stmt-table .pos{color:#1a7a4a!important;}.stmt-table .neg{color:#c0392b!important;}}
 
 
-/* ── LIGHT MODE ─────────────────────────── */
+/* Light mode improvements */
 body[data-theme="light"]{
   --bg:#edeae4;--bg2:#ffffff;--bg3:#e4e0d8;
   --cream:#111111;--cream2:#333333;
@@ -207,7 +207,11 @@ body[data-theme="light"]{
   --red:#9a2010;--green:#155828;--amber:#8a5800;
   --blue:#153c78;--teal:#0b5a50;--purple:#58206e;
 }
-body[data-theme="light"] #hdr{background:linear-gradient(160deg,#1a2f5e,#2a5298);}
+body[data-theme="light"] #hdr{background:linear-gradient(160deg,#1a2f5e,#2a5298)!important;}
+body[data-theme="light"] .hdr-appname{color:#ffffff!important;}
+body[data-theme="light"] #role-badge{color:#8bbfe8!important;}
+body[data-theme="light"] .hdr-month{color:#d0d0d0!important;}
+body[data-theme="light"] .hwn{color:#c9a84c!important;}
 body[data-theme="light"] #bnav{background:#f5f2ec;border-top:1px solid rgba(0,0,0,.12);}
 body[data-theme="light"] .nb{color:#222;}
 body[data-theme="light"] .nb.active{color:#6b4e10;}
@@ -222,7 +226,7 @@ body[data-theme="light"] #btn-logout{background:rgba(154,32,16,.75)!important;co
 <!-- AUTH SCREEN -->
 <div id="auth-screen" style="display:flex">
   <div class="auth-logo-wrap">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 88" width="220" height="88"><circle cx="16" cy="16" r="13" fill="#e74c3c"/><circle cx="46" cy="16" r="13" fill="#f39c12"/><circle cx="76" cy="16" r="13" fill="#27ae60"/><text x="3" y="52" font-family="Arial,sans-serif" font-size="26" font-weight="bold" fill="#c9a84c" letter-spacing="3">SIEHDI</text><text x="3" y="72" font-family="Arial,sans-serif" font-size="13" fill="#8bbfe8" letter-spacing="5">INSTITUTE</text></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 90" width="220" height="90"><circle cx="16" cy="16" r="13" fill="#e74c3c"/><circle cx="46" cy="16" r="13" fill="#f39c12"/><circle cx="76" cy="16" r="13" fill="#27ae60"/><text x="3" y="54" font-family="Arial,sans-serif" font-size="27" font-weight="bold" fill="#8bbfe8" letter-spacing="3">SIEHDI</text><text x="3" y="73" font-family="Arial,sans-serif" font-size="13" fill="#8bbfe8" letter-spacing="5">INSTITUTE</text></svg>
     <span class="auth-tagline">Personal Management System</span>
     <span class="auth-powered">Powered by BrainWise Enterprise</span>
   </div>
@@ -235,21 +239,21 @@ body[data-theme="light"] #btn-logout{background:rgba(154,32,16,.75)!important;co
   <header id="hdr">
     <div class="hrow">
       <div class="hdr-left">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 38" width="110" height="38"><circle cx="8" cy="7" r="6" fill="#e74c3c"/><circle cx="22" cy="7" r="6" fill="#f39c12"/><circle cx="36" cy="7" r="6" fill="#27ae60"/><text x="2" y="23" font-family="Arial,sans-serif" font-size="13" font-weight="bold" fill="#c9a84c" letter-spacing="2">SIEHDI</text><text x="2" y="33" font-family="Arial,sans-serif" font-size="7" fill="#9a9590" letter-spacing="3">INSTITUTE</text></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 112 38" width="112" height="38"><circle cx="8" cy="7" r="6" fill="#e74c3c"/><circle cx="22" cy="7" r="6" fill="#f39c12"/><circle cx="36" cy="7" r="6" fill="#27ae60"/><text x="2" y="23" font-family="Arial,sans-serif" font-size="13" font-weight="bold" fill="#c9a84c" letter-spacing="2">SIEHDI</text><text x="2" y="33" font-family="Arial,sans-serif" font-size="7" fill="#9a9590" letter-spacing="3">INSTITUTE</text></svg>
         <div class="hdr-brand">
           <span class="hdr-appname">ManageMe</span>
           <span class="hdr-sub" id="role-badge">Loading...</span>
         </div>
       </div>
-      <div class="hdr-right" style="display:flex;align-items:center;gap:6px;">
-        <div style="text-align:right;margin-right:4px;">
+      <div class="hdr-right" style="display:flex;align-items:center;gap:5px;">
+        <div style="text-align:right;margin-right:3px;">
           <span class="hdr-month" id="hm">Loading...</span>
           <span class="hwn" id="hw">W1</span>
         </div>
-        <button id="btn-font-dn" title="Decrease font size" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:26px;height:26px;border-radius:5px;cursor:pointer;font-size:10px;font-weight:bold;flex-shrink:0;">A-</button>
-        <button id="btn-font-up" title="Increase font size" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:26px;height:26px;border-radius:5px;cursor:pointer;font-size:12px;font-weight:bold;flex-shrink:0;">A+</button>
-        <button id="theme-btn" title="Toggle light/dark mode" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:26px;height:26px;border-radius:5px;cursor:pointer;font-size:15px;flex-shrink:0;">🌙</button>
-        <button id="btn-logout" title="Log Out" style="background:rgba(192,57,43,.6);border:none;color:#fff;padding:0 10px;height:26px;border-radius:5px;cursor:pointer;font-size:10px;font-weight:700;letter-spacing:.5px;flex-shrink:0;">Log Out</button>
+        <button id="btn-font-dn" onclick="adjustFont(-1)" title="Decrease font" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:26px;height:26px;border-radius:5px;cursor:pointer;font-size:10px;font-weight:bold;flex-shrink:0;">A-</button>
+        <button id="btn-font-up" onclick="adjustFont(1)"  title="Increase font" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:26px;height:26px;border-radius:5px;cursor:pointer;font-size:12px;font-weight:bold;flex-shrink:0;">A+</button>
+        <button id="theme-btn"   onclick="toggleTheme()"  title="Toggle theme"  style="background:rgba(255,255,255,.15);border:none;color:#fff;width:26px;height:26px;border-radius:5px;cursor:pointer;font-size:14px;flex-shrink:0;">D</button>
+        <button id="btn-logout"  onclick="doLogout()"     title="Log Out"       style="background:rgba(192,57,43,.6);border:none;color:#fff;padding:0 10px;height:26px;border-radius:5px;cursor:pointer;font-size:10px;font-weight:700;flex-shrink:0;">Log Out</button>
       </div>
     </div>
   </header>
@@ -336,8 +340,8 @@ var SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFz
 /* ═══════════════════════════════════════
    SIEHDI LOGOS
 ═══════════════════════════════════════ */
-var SIEHDI_LOGO_LARGE='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 210 82" width="210" height="82"><circle cx="14" cy="14" r="12" fill="#e74c3c"/><circle cx="42" cy="14" r="12" fill="#f39c12"/><circle cx="70" cy="14" r="12" fill="#27ae60"/><text x="2" y="48" font-family="Arial,sans-serif" font-size="24" font-weight="bold" fill="#c9a84c" letter-spacing="3">SIEHDI</text><text x="2" y="66" font-family="Arial,sans-serif" font-size="12" fill="#8bbfe8" letter-spacing="5">INSTITUTE</text></svg>';
-var SIEHDI_LOGO_SMALL='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 38" width="110" height="38"><circle cx="8" cy="7" r="6" fill="#e74c3c"/><circle cx="22" cy="7" r="6" fill="#f39c12"/><circle cx="36" cy="7" r="6" fill="#27ae60"/><text x="2" y="23" font-family="Arial,sans-serif" font-size="13" font-weight="bold" fill="#c9a84c" letter-spacing="2">SIEHDI</text><text x="2" y="33" font-family="Arial,sans-serif" font-size="7" fill="#9a9590" letter-spacing="3">INSTITUTE</text></svg>';
+var SIEHDI_LOGO_LARGE='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 90" width="220" height="90"><circle cx="16" cy="16" r="13" fill="#e74c3c"/><circle cx="46" cy="16" r="13" fill="#f39c12"/><circle cx="76" cy="16" r="13" fill="#27ae60"/><text x="3" y="54" font-family="Arial,sans-serif" font-size="27" font-weight="bold" fill="#8bbfe8" letter-spacing="3">SIEHDI</text><text x="3" y="73" font-family="Arial,sans-serif" font-size="13" fill="#8bbfe8" letter-spacing="5">INSTITUTE</text></svg>';
+var SIEHDI_LOGO_SMALL='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 112 38" width="112" height="38"><circle cx="8" cy="7" r="6" fill="#e74c3c"/><circle cx="22" cy="7" r="6" fill="#f39c12"/><circle cx="36" cy="7" r="6" fill="#27ae60"/><text x="2" y="23" font-family="Arial,sans-serif" font-size="13" font-weight="bold" fill="#c9a84c" letter-spacing="2">SIEHDI</text><text x="2" y="33" font-family="Arial,sans-serif" font-size="7" fill="#9a9590" letter-spacing="3">INSTITUTE</text></svg>';
 
 /* ═══════════════════════════════════════
    CONSTANTS
@@ -662,11 +666,16 @@ async function handleReset(){
   else{msg.textContent='Reset email sent! Check your inbox.';msg.style.color='var(--green)';}
 }
 async function doLogout(){
-  logAudit('LOGOUT','User signed out');
-  await sb.auth.signOut();
   CURRENT_USER=null;PROFILE=null;
+  try{logAudit('LOGOUT','User signed out');}catch(e){}
+  try{if(sb)await sb.auth.signOut();}catch(e){}
   try{localStorage.removeItem('mm-cache');}catch(e){}
-  showAuth();
+  var as=document.getElementById('auth-screen');
+  var ap=document.getElementById('app');
+  if(as)as.style.display='flex';
+  if(ap)ap.style.display='none';
+  AUTH_VIEW='login';
+  try{renderAuth();}catch(e){}
 }
 
 /* ═══════════════════════════════════════
@@ -693,7 +702,7 @@ function rPaymentTab(){
     '<div class="pr-row"><span class="pr-i" style="font-size:18px;min-width:30px">\u0031\ufe0f\u20e3</span><div class="pr-t"><strong>Pay via Mobile Money</strong><br><span style="color:var(--cream2)">Send USD 5.00 to the ManageMe payment number below using Orange Money or Lonestar MTN MoMo.</span></div></div>'+
     '<div style="background:var(--bg3);border-radius:var(--r);border:1px solid var(--b1);padding:14px;margin:10px 0;text-align:center">'+
       '<p style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--cream2);margin-bottom:6px">Payment Number</p>'+
-      '<p style="font-size:24px;font-weight:700;font-family:Playfair Display,serif;color:var(--gold)">Mobile payments coming soon — contact admin for access</p>'+
+      '<p style="font-size:24px;font-weight:700;font-family:Playfair Display,serif;color:var(--gold)">Mobile payments coming soon</p>'+
       '<p style="font-size:11px;color:var(--cream2);margin-top:4px">Orange: *144# &nbsp;\u00b7&nbsp; Lonestar: *156#</p>'+
     '</div>'+
     '<div class="pr-row"><span class="pr-i" style="font-size:18px;min-width:30px">\u0032\ufe0f\u20e3</span><div class="pr-t"><strong>Get your reference code</strong><br><span style="color:var(--cream2)">After paying, you will receive an SMS confirmation from Orange/Lonestar with a transaction reference number like <strong>LB20260503XXXXX</strong>.</span></div></div>'+
@@ -708,7 +717,7 @@ function rPaymentTab(){
     '<p style="font-size:10px;color:var(--cream2);text-align:center;margin-top:8px">Upgrades are processed Monday\u2013Friday, 8am\u20136pm Liberia time</p>'+
   '</div>'+
   (PROFILE&&PROFILE._paymentHistory?'<div class="card"><span class="sl" style="margin-bottom:8px">Your Submission History</span><p style="font-size:12px;color:var(--cream2)">Check Admin for status.</p></div>':'')+
-  '<div style="height:8px"></div>';
+  '<div style="height:8px"></div>'+rShareCard();
 }
 async function submitPayment(){
   var ref=document.getElementById('pay-ref'),prov=document.getElementById('pay-provider'),cur=document.getElementById('pay-currency'),err=document.getElementById('pay-err');
@@ -1561,6 +1570,30 @@ async function createAdminUser(){
 function setAdminView(v){ST.adminView=v;render();}
 function setAnalysisMode(m){DB.settings.analysisMode=m;saveDB();render();}
 function saveApiKey(){var el=document.getElementById('api-key');if(!el||!el.value.trim()){toast('Enter API key','error');return;}DB.settings.claudeApiKey=el.value.trim();saveDB();toast('API key saved \u2713');render();}
+
+function copyAppLink(){
+  var url=window.location.origin+(window.location.pathname||'/');
+  if(navigator.share){navigator.share({title:'ManageMe',url:url}).catch(function(){});}
+  else if(navigator.clipboard){navigator.clipboard.writeText(url).then(function(){toast('Link copied');}).catch(function(){});}
+  else{prompt('Copy link:',url);}
+}
+function rShareCard(){
+  var url=window.location.origin+(window.location.pathname||'/');
+  var msg='Try ManageMe - Personal Management System. Install on your phone: '+url;
+  return '<div class="card" style="margin-top:10px">'+
+    '<span class="sl" style="margin-bottom:6px">Share ManageMe App</span>'+
+    '<p style="font-size:11px;color:var(--cream2);margin-bottom:10px;line-height:1.6">'+
+    'Invite others. Installs directly on their phone - no app store needed.</p>'+
+    '<div class="g2" style="gap:7px">'+
+    '<a href="https://wa.me/?text='+encodeURIComponent(msg)+'" target="_blank" style="text-decoration:none">'+
+    '<button class="btn bfull" style="background:#25D366;border:none;color:#fff;padding:10px 0;font-size:11px;font-weight:700">WhatsApp</button></a>'+
+    '<a href="mailto:?subject=ManageMe App&body='+encodeURIComponent(msg)+'" style="text-decoration:none">'+
+    '<button class="btn bfull" style="background:#1a5fa0;border:none;color:#fff;padding:10px 0;font-size:11px;font-weight:700">Email</button></a>'+
+    '<a href="https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(url)+'" target="_blank" style="text-decoration:none">'+
+    '<button class="btn bfull" style="background:#0084FF;border:none;color:#fff;padding:10px 0;font-size:11px;font-weight:700">Messenger</button></a>'+
+    '<button class="btn bfull" style="padding:10px 0;font-size:11px;font-weight:700" onclick="copyAppLink()">Copy Link</button>'+
+    '</div></div>';
+}
 function saveAppUrl(){var el=document.getElementById('app-url');if(!el||!el.value.trim()){toast('Enter URL','error');return;}DB.settings.appUrl=el.value.trim();saveDB();toast('URL saved \u2713');render();}
 function exportData(){var d=JSON.stringify({goals:DB.goals,finance:DB.finance,exported:td()},null,2);dlFile(d,'ManageMe_backup_'+td()+'.json','application/json');logAudit('EXPORT','Data backup exported');}
 function clearAllData(){if(!confirm('Clear all local cached data? Cloud data is preserved.'))return;try{localStorage.removeItem('mm-cache');}catch(e){}loadDB().then(function(){render();toast('Local cache cleared');});}
@@ -1730,34 +1763,27 @@ if('serviceWorker' in navigator){window.addEventListener('load',function(){navig
 init();
 
 
-/* ── FONT SIZE & THEME CONTROLS ─── */
+/* Font scaling + Theme toggle */
 var FONT_SCALE=parseFloat(localStorage.getItem('mm-font-scale')||'1');
-(function(){document.body.style.zoom=FONT_SCALE;}());
+document.body.style.zoom=FONT_SCALE;
 function adjustFont(dir){
   FONT_SCALE=Math.max(0.75,Math.min(1.5,FONT_SCALE+dir*0.1));
   document.body.style.zoom=FONT_SCALE;
-  try{localStorage.setItem('mm-font-scale',String(FONT_SCALE));}catch(e){}
-  var btn=document.getElementById('font-info');
-  if(btn)btn.textContent=Math.round(FONT_SCALE*100)+'%';
+  try{localStorage.setItem('mm-font-scale',''+FONT_SCALE);}catch(e){}
 }
 var DARK_MODE=localStorage.getItem('mm-theme')!=='light';
 function applyTheme(){
   if(DARK_MODE)document.body.removeAttribute('data-theme');
   else document.body.setAttribute('data-theme','light');
   var btn=document.getElementById('theme-btn');
-  if(btn)btn.textContent=DARK_MODE?'🌙':'☀️';
+  if(btn)btn.textContent=DARK_MODE?'D':'L';
 }
-function toggleTheme(){DARK_MODE=!DARK_MODE;try{localStorage.setItem('mm-theme',DARK_MODE?'dark':'light');}catch(e){}applyTheme();}
-(function(){
-  // Apply saved theme immediately
+function toggleTheme(){
+  DARK_MODE=!DARK_MODE;
+  try{localStorage.setItem('mm-theme',DARK_MODE?'dark':'light');}catch(e){}
   applyTheme();
-  // Wire all header buttons directly — most reliable approach
-  function wire(id,fn){var el=document.getElementById(id);if(el){el.onclick=fn;}}
-  wire('btn-font-dn', function(){ adjustFont(-1); });
-  wire('btn-font-up', function(){ adjustFont(1); });
-  wire('theme-btn',   function(){ toggleTheme(); });
-  wire('btn-logout',  function(){ doLogout(); });
-}());
+}
+applyTheme();
 
 </script>
 </body>
