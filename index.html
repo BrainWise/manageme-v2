@@ -23,8 +23,8 @@ body{font-family:'Lato',sans-serif;background:var(--bg);color:var(--cream);min-h
 h1,h2,h3{font-family:'Playfair Display',serif;font-weight:600;}
 #auth-screen{position:fixed;inset:0;background:linear-gradient(160deg,#070f1a 0%,#0b1623 60%,#0f1f35 100%);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;overflow-y:auto;}
 .auth-logo-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:20px;}
-.auth-tagline{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--cream2);margin-top:8px;}
-.auth-powered{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(201,168,76,0.4);margin-top:4px;}
+.auth-tagline{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#d4c8a8;margin-top:8px;font-weight:600;}
+.auth-powered{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(201,168,76,0.85);margin-top:4px;}
 .auth-card{background:rgba(18,32,47,0.96);border:1px solid var(--b1);border-radius:var(--r2);padding:22px;width:100%;max-width:360px;}
 .auth-title{font-family:'Playfair Display',serif;font-size:19px;color:var(--cream);margin-bottom:16px;text-align:center;}
 .auth-field{margin-bottom:10px;}
@@ -200,17 +200,21 @@ input[type="checkbox"]{width:auto;accent-color:var(--gold);}
 
 /* ── LIGHT MODE ─────────────────────────── */
 body[data-theme="light"]{
-  --bg:#f4f1ec;--bg2:#ffffff;--bg3:#ede9e2;
-  --cream:#1a1a1a;--cream2:#555555;
-  --gold:#7a5c10;--gold2:#5c4408;--gold3:rgba(122,92,16,0.10);
-  --b1:rgba(122,92,16,0.18);--b2:rgba(0,0,0,0.08);--b3:rgba(0,0,0,0.04);
-  --red:#b03020;--green:#1a6a3a;--amber:#a06800;
-  --blue:#1a4f90;--teal:#0e7060;--purple:#6a2888;
+  --bg:#edeae4;--bg2:#ffffff;--bg3:#e4e0d8;
+  --cream:#111111;--cream2:#333333;
+  --gold:#6b4e10;--gold2:#4e3808;--gold3:rgba(107,78,16,0.12);
+  --b1:rgba(107,78,16,0.22);--b2:rgba(0,0,0,0.10);--b3:rgba(0,0,0,0.05);
+  --red:#9a2010;--green:#155828;--amber:#8a5800;
+  --blue:#153c78;--teal:#0b5a50;--purple:#58206e;
 }
-body[data-theme="light"] #bnav{background:#ffffff;border-top:1px solid rgba(0,0,0,.1);}
-body[data-theme="light"] .nb{color:#444;}
-body[data-theme="light"] .nb.active{color:var(--gold);}
-body[data-theme="light"] .card{box-shadow:0 2px 12px rgba(0,0,0,.08);}
+body[data-theme="light"] #hdr{background:linear-gradient(160deg,#1a2f5e,#2a5298);}
+body[data-theme="light"] #bnav{background:#f5f2ec;border-top:1px solid rgba(0,0,0,.12);}
+body[data-theme="light"] .nb{color:#222;}
+body[data-theme="light"] .nb.active{color:#6b4e10;}
+body[data-theme="light"] .card{background:#ffffff;box-shadow:0 2px 12px rgba(0,0,0,.10);}
+body[data-theme="light"] .sc{background:#f8f5f0;}
+body[data-theme="light"] #btn-font-dn,body[data-theme="light"] #btn-font-up,body[data-theme="light"] #theme-btn{background:rgba(255,255,255,.25)!important;color:#fff!important;}
+body[data-theme="light"] #btn-logout{background:rgba(154,32,16,.75)!important;color:#fff!important;}
 </style>
 </head>
 <body>
@@ -231,7 +235,7 @@ body[data-theme="light"] .card{box-shadow:0 2px 12px rgba(0,0,0,.08);}
   <header id="hdr">
     <div class="hrow">
       <div class="hdr-left">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 40" width="90" height="30"><circle cx="12" cy="12" r="6" fill="#e74c3c"/><circle cx="27" cy="12" r="6" fill="#f39c12"/><circle cx="42" cy="12" r="6" fill="#27ae60"/><text x="12" y="27" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#c9a84c" letter-spacing="2">SIEHDI</text><text x="12" y="37" font-family="Arial,sans-serif" font-size="6" fill="#9a9590" letter-spacing="3">INSTITUTE</text></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 38" width="110" height="38"><circle cx="8" cy="7" r="6" fill="#e74c3c"/><circle cx="22" cy="7" r="6" fill="#f39c12"/><circle cx="36" cy="7" r="6" fill="#27ae60"/><text x="2" y="23" font-family="Arial,sans-serif" font-size="13" font-weight="bold" fill="#c9a84c" letter-spacing="2">SIEHDI</text><text x="2" y="33" font-family="Arial,sans-serif" font-size="7" fill="#9a9590" letter-spacing="3">INSTITUTE</text></svg>
         <div class="hdr-brand">
           <span class="hdr-appname">ManageMe</span>
           <span class="hdr-sub" id="role-badge">Loading...</span>
@@ -242,10 +246,10 @@ body[data-theme="light"] .card{box-shadow:0 2px 12px rgba(0,0,0,.08);}
           <span class="hdr-month" id="hm">Loading...</span>
           <span class="hwn" id="hw">W1</span>
         </div>
-        <button onclick="adjustFont(-1)" title="Decrease font size" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:26px;height:26px;border-radius:5px;cursor:pointer;font-size:10px;font-weight:bold;flex-shrink:0;">A-</button>
-        <button onclick="adjustFont(1)" title="Increase font size" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:26px;height:26px;border-radius:5px;cursor:pointer;font-size:12px;font-weight:bold;flex-shrink:0;">A+</button>
+        <button id="btn-font-dn" onclick="adjustFont(-1)" title="Decrease font size" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:26px;height:26px;border-radius:5px;cursor:pointer;font-size:10px;font-weight:bold;flex-shrink:0;">A-</button>
+        <button id="btn-font-up" onclick="adjustFont(1)" title="Increase font size" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:26px;height:26px;border-radius:5px;cursor:pointer;font-size:12px;font-weight:bold;flex-shrink:0;">A+</button>
         <button onclick="toggleTheme()" id="theme-btn" title="Toggle light/dark mode" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:26px;height:26px;border-radius:5px;cursor:pointer;font-size:15px;flex-shrink:0;">🌙</button>
-        <button onclick="doLogout()" title="Sign out" style="background:rgba(192,57,43,.5);border:none;color:#fff;padding:0 8px;height:26px;border-radius:5px;cursor:pointer;font-size:10px;font-weight:700;letter-spacing:.5px;flex-shrink:0;">OUT</button>
+        <button id="btn-logout" title="Log Out" style="background:rgba(192,57,43,.6);border:none;color:#fff;padding:0 10px;height:26px;border-radius:5px;cursor:pointer;font-size:10px;font-weight:700;letter-spacing:.5px;flex-shrink:0;">Log Out</button>
       </div>
     </div>
   </header>
@@ -332,8 +336,8 @@ var SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFz
 /* ═══════════════════════════════════════
    SIEHDI LOGOS
 ═══════════════════════════════════════ */
-var SIEHDI_LOGO_LARGE='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 70" width="180" height="70"><circle cx="22" cy="22" r="10" fill="#e74c3c"/><circle cx="46" cy="22" r="10" fill="#f39c12"/><circle cx="70" cy="22" r="10" fill="#27ae60"/><text x="22" y="48" font-family="Arial,sans-serif" font-size="18" font-weight="bold" fill="#1a2f5e" letter-spacing="3">SIEHDI</text><text x="22" y="62" font-family="Arial,sans-serif" font-size="9" fill="#1a5fa0" letter-spacing="5">INSTITUTE</text></svg>';
-var SIEHDI_LOGO_SMALL='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 40" width="90" height="30"><circle cx="12" cy="12" r="6" fill="#e74c3c"/><circle cx="27" cy="12" r="6" fill="#f39c12"/><circle cx="42" cy="12" r="6" fill="#27ae60"/><text x="12" y="27" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#c9a84c" letter-spacing="2">SIEHDI</text><text x="12" y="37" font-family="Arial,sans-serif" font-size="6" fill="#9a9590" letter-spacing="3">INSTITUTE</text></svg>';
+var SIEHDI_LOGO_LARGE='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 210 82" width="210" height="82"><circle cx="14" cy="14" r="12" fill="#e74c3c"/><circle cx="42" cy="14" r="12" fill="#f39c12"/><circle cx="70" cy="14" r="12" fill="#27ae60"/><text x="2" y="48" font-family="Arial,sans-serif" font-size="24" font-weight="bold" fill="#c9a84c" letter-spacing="3">SIEHDI</text><text x="2" y="66" font-family="Arial,sans-serif" font-size="12" fill="#8bbfe8" letter-spacing="5">INSTITUTE</text></svg>';
+var SIEHDI_LOGO_SMALL='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 38" width="110" height="38"><circle cx="8" cy="7" r="6" fill="#e74c3c"/><circle cx="22" cy="7" r="6" fill="#f39c12"/><circle cx="36" cy="7" r="6" fill="#27ae60"/><text x="2" y="23" font-family="Arial,sans-serif" font-size="13" font-weight="bold" fill="#c9a84c" letter-spacing="2">SIEHDI</text><text x="2" y="33" font-family="Arial,sans-serif" font-size="7" fill="#9a9590" letter-spacing="3">INSTITUTE</text></svg>';
 
 /* ═══════════════════════════════════════
    CONSTANTS
@@ -554,7 +558,7 @@ async function loadDB(){
 async function loadProfile(){
   if(!CURRENT_USER||!sbReady)return;
   try{
-    var r=await sb.from('profiles').select('*').eq('user_id',CURRENT_USER.id).single();
+    var r=await sb.from('profiles').select('*').eq('user_id',CURRENT_USER.id).maybeSingle();
     if(r.data)PROFILE=r.data;
   }catch(e){}
 }
@@ -1728,11 +1732,13 @@ init();
 
 /* ── FONT SIZE & THEME CONTROLS ─── */
 var FONT_SCALE=parseFloat(localStorage.getItem('mm-font-scale')||'1');
-(function(){document.documentElement.style.fontSize=(16*FONT_SCALE)+'px';}());
+(function(){document.body.style.zoom=FONT_SCALE;}());
 function adjustFont(dir){
-  FONT_SCALE=Math.max(0.8,Math.min(1.5,FONT_SCALE+dir*0.1));
-  document.documentElement.style.fontSize=(16*FONT_SCALE)+'px';
+  FONT_SCALE=Math.max(0.75,Math.min(1.5,FONT_SCALE+dir*0.1));
+  document.body.style.zoom=FONT_SCALE;
   try{localStorage.setItem('mm-font-scale',String(FONT_SCALE));}catch(e){}
+  var btn=document.getElementById('font-info');
+  if(btn)btn.textContent=Math.round(FONT_SCALE*100)+'%';
 }
 var DARK_MODE=localStorage.getItem('mm-theme')!=='light';
 function applyTheme(){
@@ -1742,7 +1748,17 @@ function applyTheme(){
   if(btn)btn.textContent=DARK_MODE?'🌙':'☀️';
 }
 function toggleTheme(){DARK_MODE=!DARK_MODE;try{localStorage.setItem('mm-theme',DARK_MODE?'dark':'light');}catch(e){}applyTheme();}
-(function(){applyTheme();}());
+(function(){
+  applyTheme();
+  // Wire Log Out button via addEventListener (more reliable than inline onclick)
+  window.addEventListener('DOMContentLoaded',function(){},false);
+  document.addEventListener('click',function(e){
+    if(e.target&&e.target.id==='btn-logout'){doLogout();}
+    if(e.target&&e.target.id==='btn-font-dn'){adjustFont(-1);}
+    if(e.target&&e.target.id==='btn-font-up'){adjustFont(1);}
+    if(e.target&&e.target.id==='theme-btn'){toggleTheme();}
+  });
+}());
 
 </script>
 </body>
