@@ -810,6 +810,11 @@ function mkChart(id,cfg){if(CHARTS[id]){try{CHARTS[id].destroy();}catch(e){}}var
 function cDef(extra){var base={responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#9a9590',font:{family:'Lato',size:10}}}},scales:{x:{ticks:{color:'#9a9590',font:{size:9}},grid:{color:'rgba(255,255,255,0.04)'}},y:{ticks:{color:'#9a9590',font:{size:9}},grid:{color:'rgba(255,255,255,0.04)'}}}};return extra?Object.assign(base,extra):base;}
 /* duplicate render removed */
 function postRender(){
+  // Re-initialise goal placeholder if area is pre-selected
+  setTimeout(function(){
+    var sel=document.getElementById('parea');
+    if(sel&&sel.value)updateGoalPlaceholder();
+  },50);
   var nb=document.getElementById('btn-no');
   if(nb)nb.addEventListener('click',function(){DB.noCount++;logAudit('DISCIPLINE','Said No counter incremented to '+DB.noCount);saveDB();toast('Said No \u2014 #'+DB.noCount+' this year!');render();});
   if(ST.tab==='dashboard'){
@@ -970,9 +975,12 @@ function rPortal(){
   return'<span class="sl">Goals Portal \u2014 Master Register</span><div class="portal-period">'+ppills+'</div>'+
   '<div class="card bl" style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><p style="font-family:Playfair Display,serif;font-size:17px;margin-bottom:2px">'+pObj.label+' Goals</p><p style="font-size:11px;color:var(--cream2)">'+pObj.desc+'</p></div><span class="badge '+pObj.cls+'">'+pObj.label+'</span></div></div>'+
   '<div class="pr">'+apills+'</div>'+goalFilter+
-  '<div class="card" style="margin-bottom:12px"><span class="sl" style="margin-bottom:8px">Add Goal</span>'+
-    '<input type="text" id="pinp" placeholder="Describe this goal clearly and specifically..." style="margin-bottom:7px" onkeydown="if(event.key===\'Enter\')addPortalGoal()">'+
-    '<div class="g2" style="margin-bottom:7px"><select id="parea"><option value="">Select life area *</option>'+areaOpts+'</select><select id="pmonth"><option value="">Month (optional)</option>'+MONTHS.map(function(m,i){return'<option value="'+(i+1)+'">'+m+'</option>';}).join('')+'</select></div>'+
+  '<div class="card" style="margin-bottom:12px">'+
+    '<span class="sl" style="margin-bottom:4px">Set Your Goal</span>'+
+    '<p style="font-size:11px;color:var(--cream2);margin-bottom:8px">Be specific — state what you want to achieve, how much, and by when.</p>'+
+    '<div id="goal-hint" style="font-size:11px;color:var(--gold);background:var(--gold3);border-left:3px solid var(--gold);padding:7px 10px;border-radius:0 6px 6px 0;margin-bottom:8px;display:none;line-height:1.6"></div>'+
+    '<input type="text" id="pinp" placeholder="Select a life area below — an example will appear here..." style="margin-bottom:7px" onkeydown="if(event.key===\'Enter\')addPortalGoal()">'+
+    '<div class="g2" style="margin-bottom:7px"><select id="parea" onchange="updateGoalPlaceholder()"><option value="">Select life area *</option>'+areaOpts+'</select><select id="pmonth"><option value="">Month (optional)</option>'+MONTHS.map(function(m,i){return'<option value="'+(i+1)+'">'+m+'</option>';}).join('')+'</select></div>'+
     '<button class="btn bp bfull" onclick="addPortalGoal()">Add to '+pObj.label+' Goals</button></div>'+
   (gs.length===0?'<p class="empty">No goals for this period/filter. Add one above.</p>':gs.map(function(g){return renderGoalItem(g,true);}).join(''))+
   '<div style="height:8px"></div>';
@@ -1618,6 +1626,35 @@ function updateHdr(){
 /* ═══════════════════════════════════════
    GOAL ACTIONS
 ═══════════════════════════════════════ */
+
+/* ── GOAL GUIDANCE ──────────────────── */
+var GOAL_EXAMPLES={
+  spiritual:   'e.g. “Pray for 15 minutes every morning before I leave the house, every day this month”',
+  financial:   'e.g. “Save $50 every week until I have $600 set aside by December”',
+  personal:    'e.g. “Finish reading one book by the end of this month”',
+  family:      'e.g. “Eat dinner together as a family every Sunday evening without exception”',
+  professional:'e.g. “Complete and submit the client proposal before the end of this week”',
+  health:      'e.g. “Walk for 30 minutes every weekday morning before work”',
+  rest:        'e.g. “Be in bed by 10pm every weeknight for the next 30 days”',
+  time:        'e.g. “Spend 30 minutes every Sunday evening planning my coming week”',
+  charity:     'e.g. “Give 10% of my income to church every month without fail”'
+};
+function updateGoalPlaceholder(){
+  var sel=document.getElementById('parea');
+  var inp=document.getElementById('pinp');
+  var hint=document.getElementById('goal-hint');
+  if(!sel||!inp)return;
+  var area=sel.value;
+  var ex=GOAL_EXAMPLES[area];
+  if(ex&&hint){
+    hint.style.display='block';
+    hint.innerHTML='<strong>Example:</strong> '+ex;
+    inp.placeholder=ex.replace(/^e\.g\. /,'');
+  }else if(hint){
+    hint.style.display='none';
+    inp.placeholder='Select a life area below — an example will appear here...';
+  }
+}
 function addPortalGoal(){
   var t=document.getElementById('pinp'),a=document.getElementById('parea'),m=document.getElementById('pmonth');
   if(!t||!t.value.trim()){toast('Enter a goal','error');return;}
